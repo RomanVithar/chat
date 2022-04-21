@@ -1,4 +1,4 @@
-package com.example.websocket;
+package com.example.websocket.controler;
 
 import com.example.websocket.dto.Message;
 import com.example.websocket.service.WsService;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class WsController {
-
     @Autowired
     private WsService wsService;
 

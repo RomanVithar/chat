@@ -1,7 +1,7 @@
 package com.example.websocket.controler;
 
 import com.example.websocket.dto.Message;
-import com.example.websocket.dto.ResponseMessage;
+import com.example.websocket.payload.response.ResponseMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;

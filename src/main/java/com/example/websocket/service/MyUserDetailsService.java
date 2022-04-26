@@ -1,6 +1,6 @@
 package com.example.websocket.service;
 
-import com.example.websocket.entity.MyUserDetails;
+import com.example.websocket.security.MyUserDetails;
 import com.example.websocket.entity.User;
 import com.example.websocket.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

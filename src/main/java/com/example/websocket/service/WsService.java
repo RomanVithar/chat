@@ -1,7 +1,6 @@
 package com.example.websocket.service;
 
-import com.example.websocket.dto.Message;
-import com.example.websocket.dto.ResponseMessage;
+import com.example.websocket.payload.response.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;

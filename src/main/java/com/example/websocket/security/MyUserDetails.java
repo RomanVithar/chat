@@ -1,5 +1,6 @@
-package com.example.websocket.entity;
+package com.example.websocket.security;
 
+import com.example.websocket.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package com.example.websocket.dto;
+package com.example.websocket.payload.response;
 
 public class ResponseMessage {
     private String content;

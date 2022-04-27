@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:developer';
 import 'dart:async';
 import 'dart:convert';
@@ -20,8 +21,19 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   var stompClient;
   final ScrollController _scrollController = ScrollController();
 
+  Future<String?> _getToken() async {
+    final storage = new FlutterSecureStorage();
+    String? test = await storage.read(key: 'jwt');
+    return test;
+  }
+
+  void showToken() async {
+    print(await _getToken());
+  }
+
   @override
   void initState() {
+    showToken();
     super.initState();
     stompClient = StompClient(
       config: StompConfig(

@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:html';
+
+import 'package:chat/pages/homePage.dart';
 import 'package:chat/pages/registerPage.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key, required this.title}) : super(key: key);
@@ -12,7 +17,41 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  TextEditingController _loginController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  String _wrongPassOrLoginMessage = '';
   var rememberValue = false;
+
+  Future<void> loginUser(String login, String password) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:8080/api/v1/auth/signin'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'login': login,
+        'password': password,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final storage = new FlutterSecureStorage();
+      final encodedResp = jsonDecode(response.body);
+      print(encodedResp['token']);
+      await storage.write(key: 'jwt', value: encodedResp['token']);
+      await storage.write(key: 'login', value: encodedResp['login']);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+      setState(() {
+        _wrongPassOrLoginMessage = '';
+      });
+    } else {
+      setState(() {
+        _wrongPassOrLoginMessage = 'Incorrect login or password!';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,20 +71,31 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             const SizedBox(
-              height: 60,
+              height: 50,
+            ),
+            Text(
+              _wrongPassOrLoginMessage,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 17,
+                color: Colors.red,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             Form(
               key: _formKey,
               child: Column(
                 children: [
                   TextFormField(
-                    validator: (value) => EmailValidator.validate(value!)
-                        ? null
-                        : "Please enter a valid email",
+                    controller: _loginController,
+                    validator: (value) =>
+                        value != null ? null : "Please enter a valid login",
                     maxLines: 1,
                     decoration: InputDecoration(
-                      hintText: 'Enter your email',
-                      prefixIcon  : const Icon(Icons.email),
+                      hintText: 'Enter your login',
+                      prefixIcon: const Icon(Icons.login),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -55,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 20,
                   ),
                   TextFormField(
+                    controller: _passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -88,7 +139,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {}
+                      if (_formKey.currentState!.validate()) {
+                        loginUser(
+                            _loginController.text, _passwordController.text);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),

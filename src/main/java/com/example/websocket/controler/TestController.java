@@ -1,43 +1,25 @@
 package com.example.websocket.controler;
 
 
-//
-//@CrossOrigin(origins = "*", maxAge = 3600)
-//@RestController
-//public class TestController {
-//
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-//
-//    @Autowired
-//    private MyUserDetailsService userDetailsService;
-//
-//    @Autowired
-//    private JwtUtil jwtUtil;
-//
-//    @GetMapping("/test")
-//    @PreAuthorize("hasRole('ROLE_USER')")
-//    public String test() {
-//        System.out.println(
-//                SecurityContextHolder.getContext().getAuthentication().getName()
-//        );
-//        return ("<h1>test complete!</h1>");
-//    }
-//
-//    @RequestMapping(path="/authenticate", method=RequestMethod.POST)
-//    public ResponseEntity<?> createAuthToken(
-//            @RequestBody AuthenticationRequestDTO authenticationRequestDTO) throws Exception {
-//        try {
-//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-//                    authenticationRequestDTO.getLogin(),
-//                    authenticationRequestDTO.getPassword()
-//            ));
-//        } catch (BadCredentialsException e) {
-//            throw new Exception("Incorrect username or password", e);
-//        }
-//        final MyUserDetails userDetails = (MyUserDetails) userDetailsService
-//                .loadUserByUsername(authenticationRequestDTO.getLogin());
-//        final String jwt = jwtUtil.generateJwtToken(userDetails);
-//        return ResponseEntity.ok(new AuthenticationResponseDTO(jwt));
-//    }
-//}
+import com.example.websocket.service.MyUserDetailsService;
+import com.example.websocket.utils.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
+public class TestController {
+    @GetMapping("/test")
+//    @PreAuthorize("hasRole('USER')")
+    public String test() {
+        System.out.println(
+                SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+        return ("test complete!");
+    }
+}

@@ -1,3 +1,4 @@
+import 'package:chat/pages/chatDetailPage.dart';
 import 'package:chat/pages/chatPage.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,7 @@ class HomePage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ChatPage(),
+      body: ChatDetailPage(),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.red,
         unselectedItemColor: Colors.grey.shade600,

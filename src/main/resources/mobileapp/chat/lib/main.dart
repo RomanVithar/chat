@@ -1,3 +1,4 @@
+import 'package:chat/pages/chatDetailPage.dart';
 import 'package:chat/pages/homePage.dart';
 import 'package:chat/pages/loginPage.dart';
 import 'package:chat/pages/registerPage.dart';
@@ -35,8 +36,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.grey,
       ),
       debugShowCheckedModeBanner: false,
-      home: const LoginPage(title: 'Login UI'),
-      // home: HomePage(),
+      // home: const LoginPage(title: 'Login UI'),
+      home: ChatDetailPage(),
     );
   }
 }

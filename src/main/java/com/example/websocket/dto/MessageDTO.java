@@ -1,6 +1,6 @@
 package com.example.websocket.dto;
 
-public class Message {
+public class MessageDTO {
     private String messageContent;
 
     public String getMessageContent() {

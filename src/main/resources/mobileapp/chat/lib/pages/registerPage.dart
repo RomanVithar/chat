@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 
 import 'homePage.dart';
 import 'loginPage.dart';
@@ -19,8 +20,39 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _loginController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   String _wrongRequestMessage = '';
+  String _wrongPassOrLoginMessage = '';
 
   var rememberValue = false;
+
+  Future<void> loginUser(String login, String password) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:8080/api/v1/auth/signin'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'login': login,
+        'password': password,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final storage = LocalStorage("chat");
+      final encodedResp = jsonDecode(response.body);
+      await storage.setItem('jwt', encodedResp['token']);
+      await storage.setItem('login', encodedResp['login']);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+      setState(() {
+        _wrongPassOrLoginMessage = '';
+      });
+    } else {
+      setState(() {
+        _wrongPassOrLoginMessage = 'Incorrect login or password!';
+      });
+    }
+  }
 
   Future<void> signUpUser(String login, String password) async {
     final response = await http.post(
@@ -34,10 +66,7 @@ class _RegisterPageState extends State<RegisterPage> {
       }),
     );
     if (response.statusCode == 200) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
+      loginUser(login, password);
       setState(() {
         _wrongRequestMessage = '';
       });

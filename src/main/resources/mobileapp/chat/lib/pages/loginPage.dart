@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
       await storage.setItem('login', encodedResp['login']);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
       setState(() {
         _wrongPassOrLoginMessage = '';
@@ -121,18 +121,18 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  CheckboxListTile(
-                    title: const Text("Remember me"),
-                    contentPadding: EdgeInsets.zero,
-                    value: rememberValue,
-                    activeColor: Theme.of(context).colorScheme.primary,
-                    onChanged: (newValue) {
-                      setState(() {
-                        rememberValue = newValue!;
-                      });
-                    },
-                    controlAffinity: ListTileControlAffinity.leading,
-                  ),
+                  // CheckboxListTile(
+                  //   title: const Text("Remember me"),
+                  //   contentPadding: EdgeInsets.zero,
+                  //   value: rememberValue,
+                  //   activeColor: Theme.of(context).colorScheme.primary,
+                  //   onChanged: (newValue) {
+                  //     setState(() {
+                  //       rememberValue = newValue!;
+                  //     });
+                  //   },
+                  //   controlAffinity: ListTileControlAffinity.leading,
+                  // ),
                   const SizedBox(
                     height: 20,
                   ),

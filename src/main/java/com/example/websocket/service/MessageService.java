@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MessageService {
     private final MessageRepository messageRepository;
@@ -26,5 +28,9 @@ public class MessageService {
                 .getContext().getAuthentication().getName());
         message.setUser(user);
         messageRepository.save(message);
+    }
+
+    public List<Message> getAll() {
+        return messageRepository.findAll();
     }
 }

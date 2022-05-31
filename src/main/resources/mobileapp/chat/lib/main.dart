@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.grey,
       ),
       debugShowCheckedModeBanner: false,
-      // home: const LoginPage(title: 'Login UI'),
-      home: ChatDetailPage(),
+      home: const LoginPage(title: 'Login UI'),
+      // home: ChatDetailPage(),
     );
   }
 }

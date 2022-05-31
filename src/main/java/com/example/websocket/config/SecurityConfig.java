@@ -39,8 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/v3/api-docs/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/swagger-ui-custom.html/**").permitAll()
                 .antMatchers("/chatapp/websocket/**").permitAll()
-                .antMatchers("/test").hasAuthority("USER")
+                .antMatchers("/api/v1/message").hasAuthority("USER")
                 .anyRequest().authenticated();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

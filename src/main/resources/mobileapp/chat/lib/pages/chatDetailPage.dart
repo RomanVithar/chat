@@ -1,7 +1,7 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:localstorage/localstorage.dart';
 import 'dart:developer';
 import 'dart:async';
 import 'dart:convert';
@@ -23,23 +23,17 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   final _inputController = TextEditingController();
   var stompClient;
   final ScrollController _scrollController = ScrollController();
-  final storage = const FlutterSecureStorage();
+  late var storage = LocalStorage("chat");
   String? _token;
   String? _login;
-
-  void _getToken() async {
-    _token = await storage.read(key: 'jwt');
-  }
-
-  void _getLogin() async {
-    _login = await storage.read(key: 'login');
-  }
 
   @override
   void initState() {
     super.initState();
-    _getToken();
-    _getLogin();
+    storage;
+    _token = storage.getItem('jwt');
+    _login = storage.getItem('login');
+    _addHistory();
     stompClient = StompClient(
       config: StompConfig(
         url: 'ws://localhost:8080/chatapp/websocket',
@@ -48,58 +42,23 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               destination: '/topic/messages',
               callback: (frame) {
                 Map<String, dynamic> result = json.decode(frame.body!);
-                _showMessage(result['content'], result['receiver']);
+                String messageType = 'sender';
+                if (result['receiver'] != _login) {
+                  messageType = 'receiver';
+                }
+                _showMessage(
+                    result['content'], messageType, _login.toString());
               });
         },
         onWebSocketError: (dynamic error) => print(error.toString()),
       ),
     );
     stompClient.activate();
-    messages.addAll([
-      ChatMessage(
-          messageContent: "Hello, Will",
-          messageType: "receiver",
-          receiver: "user"),
-      ChatMessage(
-          messageContent: "Hello, Will",
-          messageType: "receiver",
-          receiver: "user"),
-      ChatMessage(
-          messageContent: "Hello, Will",
-          messageType: "receiver",
-          receiver: "user"),
-      ChatMessage(
-          messageContent: "Hello, Will",
-          messageType: "receiver",
-          receiver: "user"),
-      ChatMessage(
-          messageContent: "Hello, Will",
-          messageType: "receiver",
-          receiver: "user"),
-      ChatMessage(
-          messageContent: "Hello, Will",
-          messageType: "receiver",
-          receiver: "user"),
-      ChatMessage(
-          messageContent: "Hello, Will",
-          messageType: "receiver",
-          receiver: "user"),
-      ChatMessage(
-          messageContent: "Hello, Will",
-          messageType: "receiver",
-          receiver: "user"),
-    ]);
   }
 
-  void _showMessage(String text, String receiver) async {
-    String messageType = "sender";
-    if (receiver != _login) {
-      messageType = "receiver";
-    }
+  void _showMessage(String text, String messageType, String receiver) {
     messages.add(ChatMessage(
-        messageContent: text,
-        messageType: messageType,
-        receiver: _login.toString()));
+        messageContent: text, messageType: messageType, receiver: receiver));
     setState(() {
       _inputController.text = "";
       _scrollController.animateTo(
@@ -119,7 +78,27 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       body: jsonEncode(<String, String>{'messageContent': text}),
     );
     if (response.statusCode != 200) {
-      _showMessage('message don\'t send', "sender");
+      _showMessage('message don\'t send', "notification", _login.toString());
+    }
+  }
+
+  Future<void> _addHistory() async {
+    final response = await http.get(
+      Uri.parse('http://localhost:8080/api/v1/message'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': _token.toString(),
+      },
+    );
+    if (response.statusCode == 200) {
+      List messagesDict = jsonDecode(response.body);
+      for (var item in messagesDict) {
+        var messageType = 'receiver';
+        if (item['user']['login'] == _login) {
+          messageType = 'sender';
+        }
+        _showMessage(item['content'], messageType, item['user']['login']);
+      }
     }
   }
 

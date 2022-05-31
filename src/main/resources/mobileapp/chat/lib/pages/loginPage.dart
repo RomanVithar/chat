@@ -4,8 +4,8 @@ import 'dart:html';
 import 'package:chat/pages/homePage.dart';
 import 'package:chat/pages/registerPage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key, required this.title}) : super(key: key);
@@ -34,11 +34,10 @@ class _LoginPageState extends State<LoginPage> {
       }),
     );
     if (response.statusCode == 200) {
-      final storage = new FlutterSecureStorage();
+      final storage = LocalStorage("chat");
       final encodedResp = jsonDecode(response.body);
-      print(encodedResp['token']);
-      await storage.write(key: 'jwt', value: encodedResp['token']);
-      await storage.write(key: 'login', value: encodedResp['login']);
+      await storage.setItem('jwt', encodedResp['token']);
+      await storage.setItem('login', encodedResp['login']);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),

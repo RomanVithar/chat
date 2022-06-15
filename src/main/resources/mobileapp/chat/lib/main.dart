@@ -1,3 +1,4 @@
+import 'package:chat/models/cryptoData.dart';
 import 'package:chat/pages/chatDetailPage.dart';
 import 'package:chat/pages/homePage.dart';
 import 'package:chat/pages/loginPage.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(const MyApp());
 }
-
 
 ColorScheme defaultColorScheme = const ColorScheme(
   primary: Color(0xffBB86FC),
@@ -23,7 +23,6 @@ ColorScheme defaultColorScheme = const ColorScheme(
   brightness: Brightness.dark,
 );
 
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -38,6 +37,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const LoginPage(title: 'Login UI'),
       // home: ChatDetailPage(),
+      // home: const HomePage(),
     );
   }
 }

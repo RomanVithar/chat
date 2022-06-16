@@ -25,6 +25,7 @@ class _ExchangeratesPageState extends State<ExchangeratesPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
             body: Container(
       child: Column(
